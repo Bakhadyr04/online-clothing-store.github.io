@@ -1,0 +1,12 @@
+[MASTER]
+load-plugins=pylint_django
+
+[DJANGO]
+django-settings-module=OnlineStore.settings
+
+[FORMAT]
+max-line-length=200
+disable=invalid-name, too-few-public-methods
+
+[MESSAGES CONTROL]
+disable=C0114, C0115, E1101, R1705, W0613, W0105, W0611, C0301, C0305, W1406, C0411, C0412

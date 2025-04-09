@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+<!-- Наследование от базового шаблона base.html -->
+
+{% load static %}
+<!-- Загрузка статических файлов -->
+
+{% block css %}
+<link rel="stylesheet" href="{% static "assets/css/users.css"%}" />
+<!-- Подключение таблицы стилей users.css из статических файлов -->
+{% endblock %}
+
+{% block content %}
+<!-- Начало блока content, который будет вставлен в блок content базового шаблона -->
+
+<h1>Войти на сайт</h1>
+<!-- Заголовок формы входа -->
+
+<form method="post">
+<!-- Форма для входа пользователя, метод POST -->
+
+  {% csrf_token %}
+  <!-- CSRF-токен для безопасности формы -->
+
+  {% for field in form %}
+  <!-- Цикл для отображения полей формы -->
+
+  <p>
+    <div class="form-field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}:</label> {{ field }}
+      <!-- Отображение поля формы с его меткой -->
+    </div>
+
+    {% if form.errors %}
+    <!-- Проверка наличия ошибок в форме -->
+    <div class="alert alert-danger">
+      {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+          <span class="error-message">{{ error }}</span>
+          <!-- Отображение ошибок, если они есть -->
+        {% endfor %}
+      {% endfor %}
+    </div>
+    {% endif %}
+  </p>
+  {% endfor %}
+  <!-- Завершение цикла для полей формы -->
+
+  <br>
+  <button type="submit">Войти</button>
+  <!-- Кнопка для отправки формы -->
+
+</form>
+
+<div>
+  Еще не зарегистрированы?
+  <a href="{% url 'users:signup' %}">Зарегистрироваться</a>
+  <!-- Ссылка для перехода на страницу регистрации -->
+</div>
+
+<a href="{% url 'users:password_reset_form' %}">
+  Забыли пароль?
+</a>
+<!-- Ссылка для перехода на страницу сброса пароля -->
+
+{% endblock %}
+<!-- Завершение блока content -->

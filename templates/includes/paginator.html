@@ -1,0 +1,28 @@
+<!--каждая часть шаблона обрабатывает и отображает элементы пагинации,-->
+<!--включая предыдущую и следующую страницы, текущую страницу и доступные страницы для перехода.-->
+
+{% if page_obj.has_previous %}
+  <!-- Предыдущая страница -->
+  <a href="?page={{ page_obj.previous_page_number }}" class="button small">Prev</a>
+{% else %}
+  <!-- Если нет предыдущей страницы, ссылка отключена -->
+  <a class="button small disabled">Prev</a>
+{% endif %}
+
+{% for i in page_obj.paginator.page_range %}
+  {% if page_obj.number == i %}
+    <!-- Текущая страница -->
+    <a href="#" class="button small disabled">{{ i }}</a>
+  {% else %}
+    <!-- Ссылки на другие страницы -->
+    <a href="?page={{ i }}" class="button small">{{ i }}</a>
+  {% endif %}
+{% endfor %}
+
+{% if page_obj.has_next %}
+  <!-- Следующая страница -->
+  <a href="?page={{ page_obj.next_page_number }}" class="button small">Next</a>
+{% else %}
+  <!-- Если нет следующей страницы, ссылка отключена -->
+  <a class="button small disabled">Next</a>
+{% endif %}

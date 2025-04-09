@@ -1,0 +1,19 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?0KHQsdGA0L7RgSDQv9Cw0YDQvtC70Y8g0L3QsCAxMjcuMC4wLjE6ODAwMA==?=
+From: webmaster@localhost
+To: bahadyr04@gmail.com
+Date: Sun, 29 Dec 2024 18:16:14 -0000
+Message-ID: <173549617444.12060.7530886839958983459@DESKTOP-5ISBTC0>
+
+Someone asked for password reset for email bahadyr04@gmail.com. <!-- Уведомление о запросе сброса пароля для указанного email -->
+
+Follow the link below: <!-- Инструкция для пользователя -->
+
+http://127.0.0.1:8000/users/auth/password_reset_confirm/Mw/citf32-c345afad6c0d013fff567bb6e319c6f3/  <!-- Формирование ссылки для сброса пароля -->
+
+Your username, in case you've forgotten: Bakhadyr69  <!-- Вывод имени пользователя, если оно было забыто -->
+
+-------------------------------------------------------------------------------

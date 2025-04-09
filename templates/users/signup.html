@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+<!-- Наследование от базового шаблона base.html -->
+
+{% load static %}
+<!-- Загрузка статических файлов -->
+
+{% block css %}
+<!-- Начало блока css для подключения CSS стилей -->
+
+<link rel="stylesheet" href="{% static "assets/css/users.css"%}" />
+<!-- Подключение CSS файла для стилизации формы -->
+
+{% endblock %}
+<!-- Завершение блока css -->
+
+{% block content %}
+<!-- Начало блока content, который будет вставлен в блок content базового шаблона -->
+
+<h1>Зарегистрироваться</h1>
+<!-- Заголовок формы регистрации -->
+
+<form method="post" action="{% url 'users:signup' %}">
+<!-- Форма для отправки данных регистрации -->
+
+  {% csrf_token %}
+  <!-- CSRF защита -->
+
+  {% for field in form %}
+  <!-- Цикл для отображения полей формы -->
+
+  <p>
+    <div class="form-field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}:</label> {{ field }}
+      <!-- Отображение метки поля и самого поля ввода -->
+    </div>
+
+    {% if form.errors %}
+    <!-- Проверка на наличие ошибок в форме -->
+
+    <div class="alert alert-danger">
+      {% for error in field.errors %}
+        <p>{{ error }}</p>
+        <!-- Вывод ошибок, если они есть -->
+      {% endfor %}
+    </div>
+    {% endif %}
+  </p>
+  {% endfor %}
+
+  <button type="submit" class="btn btn-primary">
+    Зарегистрироваться
+    <!-- Кнопка для отправки формы -->
+  </button>
+</form>
+{% endblock %}
+<!-- Завершение блока content -->

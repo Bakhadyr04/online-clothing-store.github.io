@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+{% load static %} <!-- Загружаем тег static для работы со статическими файлами -->
+<html>
+	<head>
+		<title>Bakhadyr Rasuloff Hype Shop</title>
+		<meta charset="utf-8" /> <!-- Устанавливаем кодировку -->
+		<link rel="icon" href="{% static "images/logo.svg" %}" > <!-- Иконка сайта -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" /> <!-- Мета-тег для адаптивного дизайна -->
+		<link rel="stylesheet" href="{% static "assets/css/main.css"%}" /> <!-- Подключение основного CSS файла -->
+		<noscript><link rel="stylesheet" href="{% static "assets/css/noscript.css"%}" /></noscript> <!-- Подключение CSS для случаев, когда JavaScript отключен -->
+		{% block css %} <!-- Блок для подключения дополнительных CSS файлов -->
+		{% endblock %}
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+		<div id="wrapper">
+			<!-- Header -->
+			{% include 'includes/header.html' %} <!-- Подключение хедера из отдельного файла -->
+
+			<!-- Main -->
+			<div id="main">
+				<div class="inner">
+					{% block content %} <!-- Блок для основного контента страницы -->
+					{% endblock %}
+					<!-- Paginator -->
+					{% if page_obj %}<div style="text-align: center;"><hr>{% include 'includes/paginator.html' %}</div>{% endif %} <!-- Подключение пагинатора, если он есть -->
+				</div>
+			</div>
+			<!-- Footer -->
+			{% include 'includes/footer.html' %} <!-- Подключение футера из отдельного файла -->
+		</div>
+		<!-- Scripts -->
+		<script src={% static "assets/js/jquery.min.js"%}></script> <!-- Подключение jQuery -->
+		<script src={% static "assets/js/browser.min.js"%}></script> <!-- Подключение скрипта для работы с браузером -->
+		<script src={% static "assets/js/breakpoints.min.js"%}></script> <!-- Подключение скрипта для работы с брейкпоинтами -->
+		<script src={% static "assets/js/util.js"%}></script> <!-- Подключение утилитарного скрипта -->
+		<script src={% static "assets/js/main.js"%}></script> <!-- Подключение основного скрипта -->
+		{% block js %} <!-- Блок для подключения дополнительных JavaScript файлов -->
+		{% endblock %}
+	</body>
+</html>

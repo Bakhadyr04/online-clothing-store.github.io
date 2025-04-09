@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>История изменений товара</title>
+</head>
+<body>
+    <h1>История изменений товара: {{ item.title }}</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Тип изменения</th>
+            <th>Старые значения</th>
+            <th>Новые значения</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for change in history %}
+            <tr>
+                <td>{{ change.timestamp }}</td>
+                <td>{{ change.get_change_type_display }}</td>
+                <td>{{ change.old_value }}</td>
+                <td>{{ change.new_value }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+{% extends 'base.html' %} <!-- Наследуемся от базового шаблона base.html -->
+
+{% load static %} <!-- Загружаем тег static для использования статических файлов -->
+
+{% block css %} <!-- Начало блока css, который будет вставлен в блок css базового шаблона -->
+<link rel="stylesheet" href="{% static "assets/css/checkout.css"%}" /> <!-- Подключаем файл стилей для страницы оформления заказа -->
+{% endblock %}
+
+{% block content %} <!-- Начало блока content, который будет вставлен в блок content базового шаблона -->
+<h1>Оформление заказа</h1> <!-- Заголовок страницы оформления заказа -->
+
+<!-- Проверяем, есть ли сообщения (например, ошибки или уведомления) -->
+{% if messages %}
+<div class="messages-container">
+  <ul class="messages">
+    {% for message in messages %}
+      <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div> <!-- Выводим каждое сообщение -->
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<!-- Форма для оформления заказа -->
+<form method="post" action="{% url 'checkout:create_order'%}">
+  {% csrf_token %} <!-- CSRF токен для защиты формы -->
+  <section>
+  <div class="row">
+    <!-- Блок с полями для ввода данных о доставке -->
+    <div class="col-md-8" style="width: 60%; padding-right: 20px;">
+      <div><h2>Доставка</h2></div>
+      {% for field in form %}
+        {% if field.name != 'payment_method' %}
+          <div class="form-group">
+            {{ field }} <!-- Поле формы -->
+            <div class="text-danger error-message">
+              {% for error in field.errors %}
+                <span>{{ error }}</span> <!-- Вывод ошибок для поля -->
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Блок с информацией о заказе -->
+    <div class="col-md-4" style="width: 40%;">
+      <h2>Ваш заказ</h2>
+      {% if cart.items.exists %}
+        <div class="table-wrapper">
+          <table class="alt">
+            <thead>
+              <tr>
+                <th>Название</th>
+                <th>Количество</th>
+                <th>Цена</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cart_item in cart.items.all %}
+              <tr>
+                <td>{{ cart_item.item.title|truncatechars:20 }}</td> <!-- Название товара, обрезанное до 20 символов -->
+                <td>{{ cart_item.quantity }}</td> <!-- Количество товара -->
+                <td>{{ cart_item.total_price }}</td> <!-- Общая стоимость товара -->
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2"></td>
+                <td><b>{{ cart.total_price }}</b></td> <!-- Общая стоимость всех товаров в корзине -->
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      {% else %}
+        Корзина пустая
+        <a href="{% url 'store:home' %}"  style="margin-bottom: 100px; margin-top: 50px;" class="button">Вернуться на главную</a> <!-- Ссылка для возврата на главную страницу -->
+      {% endif %}
+
+      <!-- Блок выбора способа оплаты -->
+      <div><h2>Выберите способ оплаты</h2></div>
+      {{ form.payment_method }} <!-- Поле формы для выбора способа оплаты -->
+
+      <!-- Всплывающее окно для опции "Картой онлайн" -->
+      {% include 'checkout/popup.html' %}
+    </div>
+  </section>
+
+    <!-- Кнопки для сброса и отправки формы -->
+    <div class="actions" style="text-align: justify; margin-top: 100px;">
+      <input type="reset" value="Сбросить" style="float: left;"> <!-- Кнопка сброса формы -->
+      {% if cart.items.exists %}
+        <input type="submit" value="Оставить заказ" class="primary" style="float: right;"> <!-- Кнопка отправки формы, активна если корзина не пуста -->
+      {% else %}
+        <input type="submit" value="Оставить заказ" class="primary disabled" style="float: right;"> <!-- Кнопка отправки формы, неактивна если корзина пуста -->
+      {% endif %}
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block js %} <!-- Начало блока js, который будет вставлен в блок js базового шаблона -->
+<script src={% static "assets/js/checkout.js"%}></script> <!-- Подключаем файл скриптов для страницы оформления заказа -->
+
+<!-- Подключаем PayPal JavaScript SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+<script src={% static "assets/js/payment.js"%}></script> <!-- Подключаем файл скриптов для обработки платежей -->
+{% endblock %}

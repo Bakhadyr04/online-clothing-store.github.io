@@ -1,0 +1,32 @@
+<footer id="footer"> <!-- Начало футера с уникальным идентификатором footer -->
+    <div class="inner"> <!-- Внутренняя область футера -->
+        <section> <!-- Первая секция в футере -->
+            <h2>Остались вопросы? Свяжитесь с нами</h2> <!-- Заголовок первой секции -->
+            <form method="post" action="{% url 'users:feedback_processing'%}"> <!-- Форма для отправки обратной связи, метод POST -->
+                {% csrf_token %} <!-- CSRF-токен для защиты от межсайтовой подделки запросов -->
+                <div class="fields"> <!-- Контейнер для полей формы -->
+                    <div class="field half"> <!-- Первое поле формы, половина ширины -->
+                        <input type="text" name="feedback_name" id="feedback_name" placeholder="Имя" /> <!-- Поле для ввода имени -->
+                    </div>
+                    <div class="field half"> <!-- Второе поле формы, половина ширины -->
+                        <input type="email" name="feedback_email" id="feedback_email" placeholder="Почта" /> <!-- Поле для ввода email -->
+                    </div>
+                    <div class="field"> <!-- Третье поле формы, полная ширина -->
+                        <textarea name="feedback_message" id="feedback_message" placeholder="Сообщение"></textarea> <!-- Поле для ввода сообщения -->
+                    </div>
+                </div>
+                <ul class="actions"> <!-- Контейнер для действий -->
+                    <li><input type="submit" value="Отправить" class="primary" /></li> <!-- Кнопка отправки формы -->
+                </ul>
+            </form>
+        </section>
+        <section> <!-- Вторая секция в футере -->
+            <h2>Мои ресурсы</h2> <!-- Заголовок второй секции -->
+            <ul class="icons"> <!-- Список иконок -->
+                <li><a href="https://github.com/Bakhadyr04" class="icon brands style2 fa-github"><span class="label">GitHub</span></a></li> <!-- Ссылка на GitHub -->
+                <li><a href="https://t.me/FIT231_322" class="icon solid style2 fa-phone"><span class="label">Telegram</span></a></li> <!-- Ссылка на Telegram -->
+                <li><a href="mailto:bahadyr2004@mail.ru" class="icon solid style2 fa-envelope"><span class="label">Email</span></a></li> <!-- Ссылка на Email -->
+            </ul>
+        </section>
+    </div>
+</footer> <!-- Завершение футера -->

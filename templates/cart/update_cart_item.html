@@ -1,0 +1,21 @@
+{% extends 'base.html' %} <!-- Наследуемся от базового шаблона base.html -->
+
+{% load static %} <!-- Загружаем тег static для использования статических файлов -->
+
+{% block css %} <!-- Начало блока css, который будет вставлен в блок css базового шаблона -->
+<link rel="stylesheet" href="{% static "assets/css/cart.css" %}" /> <!-- Подключаем файл стилей для корзины -->
+{% endblock %}
+
+{% block content %} <!-- Начало блока content, который будет вставлен в блок content базового шаблона -->
+<h1>Обновить количество товара</h1> <!-- Заголовок страницы -->
+
+<!-- Форма для обновления количества товара -->
+<form method="post" action="{% url 'cart:update_cart_item_form' cart_item.id %}">
+  {% csrf_token %} <!-- CSRF токен для защиты формы -->
+  {{ form.as_p }} <!-- Рендеринг формы с полями в виде параграфов -->
+  <button type="submit" class="button">Обновить</button> <!-- Кнопка отправки формы -->
+</form>
+
+<!-- Ссылка для возврата в корзину -->
+<a href="{% url 'cart:cart' %}" class="button">Вернуться в корзину</a>
+{% endblock %}

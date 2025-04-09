@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+<!-- Наследование от базового шаблона base.html -->
+
+{% block content %}
+<!-- Начало блока content, который будет вставлен в блок content базового шаблона -->
+
+{% load static %}
+<!-- Загрузка тега static для работы с статическими файлами -->
+
+<h1>Hype Shop: Онлайн-магазин хайповой одежды<br /></h1>
+<!-- Заголовок главной страницы -->
+
+<p>Мой проект - это современный интернет-магазин, который был разработан с использованием передовых технологий веб-разработки. Использовался язык программирования Python и его фреймворк Django для создания серверной части сайта.</p>
+<!-- Описание проекта и используемых технологий -->
+
+<p>Для создания пользовательского интерфейса были использованы языки HTML, CSS и JavaScript. Большее количество шаблонов было взято с <a href="http://html5up.net">HTML5 UP</a></p>
+<!-- Информация о использованных технологиях и источниках шаблонов -->
+
+<p>Я также использовал SQLite для хранения данных, таких как информация о товарах и заказах.</p>
+<!-- Упоминание использования базы данных SQLite -->
+
+<section class="tiles">
+<!-- Начало секции с товарами -->
+
+    {% for item in page_obj %}
+    <!-- Цикл для вывода каждого товара -->
+
+    <article class="style{{ range|random }}">
+    <!-- Один товар с классом style и случайным номером в диапазоне range -->
+
+        <span class="image">
+        <!-- Блок с изображением товара -->
+
+        {% if item.image %}
+            <!-- Проверка наличия изображения товара -->
+            <img src="{{ item.image.url }}" alt="" style="width: 353px; height: 326px;" />
+            <!-- Вывод изображения с заданными размерами -->
+        {% else %}
+            <!-- Если изображение отсутствует, выводим запасное изображение -->
+            <img src="{% static "images/pic01.jpg" %}" alt="" />
+        {% endif %}
+
+        </span>
+
+        <a href="{% url 'store:item_details' item.slug %}">
+        <!-- Ссылка на страницу с деталями товара -->
+
+            <div class="tag">
+            <!-- Блок с тегами товара -->
+
+                <object>
+                <!-- Объект для вложенных ссылок на теги -->
+
+                    {% for tag in item.tags.all %}
+                        <!-- Цикл для вывода всех тегов товара -->
+                        <a href="{% url 'store:tag_details' tag.slug %}" style="color: white">{{ tag }}</a>
+                        <!-- Ссылка на страницу с деталями тега -->
+                        {% if not forloop.last %},{% endif %}
+                        <!-- Если это не последний тег, выводим запятую -->
+                    {% endfor %}
+
+                </object><br />
+                <!-- Завершение блока тегов и перевод строки -->
+
+            </div>
+
+            <h2>{{ item.title }}</h2>
+            <!-- Заголовок товара -->
+
+            <div class="content">
+            <!-- Блок с описанием товара -->
+
+                <p>{{ item.description|truncatechars:150 }}</p>
+                <!-- Вывод описания товара с обрезкой до 150 символов -->
+
+            </div>
+
+        </a>
+
+    </article>
+    <!-- Завершение блока с одним товаром -->
+
+    {% endfor %}
+    <!-- Завершение цикла для вывода товаров -->
+
+</section>
+<!-- Завершение секции с товарами -->
+
+<!-- Добавляем скрипт для загрузки товаров через API -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch('/api/items/')
+      .then(response => response.json())
+      .then(data => {
+        const productList = document.getElementById('product-list');
+        data.forEach(item => {
+          const productHTML = `
+            <article class="style${Math.floor(Math.random() * 6) + 1}">
+              <span class="image">
+                <img src="${item.image ? item.image : '{% static "images/pic01.jpg" %}'}" alt="" style="width: 353px; height: 326px;" />
+              </span>
+              <a href="/${item.slug}">
+                <div class="tag">
+                  ${item.tags.map(tag => `<a href="/category-details/${tag.slug}" style="color: white">${tag.name}</a>`).join(', ')}
+                </div>
+                <h2>${item.title}</h2>
+                <div class="content">
+                  <p>${item.description.substring(0, 150)}...</p>
+                </div>
+              </a>
+            </article>
+          `;
+          productList.innerHTML += productHTML;
+        });
+      })
+      .catch(error => console.error('Error:', error));
+  });
+</script>
+
+
+{% endblock %}
+<!-- Завершение блока content -->

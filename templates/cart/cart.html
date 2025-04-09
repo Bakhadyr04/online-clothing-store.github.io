@@ -1,0 +1,77 @@
+{% extends 'base.html' %} <!-- Наследуемся от базового шаблона base.html -->
+
+{% load static %} <!-- Загружаем тег static для использования статических файлов -->
+{% block css %} <!-- Начало блока css, который будет вставлен в блок css базового шаблона -->
+  <link rel="stylesheet" href="{% static "assets/css/cart.css" %}" /> <!-- Подключаем файл стилей для корзины -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Подключаем библиотеку jQuery -->
+{% endblock %}
+
+{% block content %} <!-- Начало блока content, который будет вставлен в блок content базового шаблона -->
+<h1>Корзина</h1> <!-- Заголовок страницы -->
+{% if cart_items %} <!-- Проверяем, есть ли товары в корзине -->
+  <section> <!-- Начало секции корзины -->
+    <div class="table-wrapper"> <!-- Обертка для таблицы -->
+      <table class="alt"> <!-- Таблица для отображения товаров в корзине -->
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Количество</th>
+            <th>Цена</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cart_item in cart_items %} <!-- Перебор всех товаров в корзине -->
+          <tr>
+            <td><a href="{% url 'store:item_details' cart_item.item.slug %}">{{ cart_item.item.title }}</a></td> <!-- Ссылка на детальную страницу товара -->
+            <td>
+                <div class="count"> <!-- Обертка для управления количеством товара -->
+                    <span class="minus" data-cart-item-id="{{ cart_item.id }}">—</span> <!-- Кнопка уменьшения количества -->
+                    <input type="number" value="{{ cart_item.quantity }}" class="quantity-input" data-cart-item-id="{{ cart_item.id }}"> <!-- Поле ввода количества -->
+                    <span class="plus" data-cart-item-id="{{ cart_item.id }}">+</span> <!-- Кнопка увеличения количества -->
+                </div>
+                <form id="update-cart-item-form-{{ cart_item.id }}" method="POST" action="{% url 'cart:update_cart_item' %}" style="display:none;"> <!-- Форма для обновления количества товара в корзине -->
+                    {% csrf_token %} <!-- CSRF токен для защиты формы -->
+                    <input type="hidden" id="new-quantity-input-{{ cart_item.id }}" name="new_quantity"> <!-- Скрытое поле для нового количества -->
+                    <input type="hidden" id="cart-item-id-input-{{ cart_item.id }}" name="cart_item_id"> <!-- Скрытое поле для ID товара в корзине -->
+                </form>
+            </td>
+            <td class="cart-item-total-price" data-cart-item-id="{{ cart_item.id }}">{{ cart_item.total_price }}</td> <!-- Отображение общей стоимости товара -->
+            <td style="border: none; background-color: #ffffff;" align="center"> <!-- Ячейка для кнопки удаления товара -->
+                <a href="{% url 'cart:delete_cart_item' cart_item.item.slug %}"> <!-- Ссылка для удаления товара из корзины -->
+                    <img src="{% static "images/garbage.svg" %}" width="25" height="25"> <!-- Иконка корзины для удаления -->
+                </a>
+            </td>
+          </tr>
+          {% endfor %} <!-- Конец перебора товаров в корзине -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2"></td>
+            <td><u><b><span id="cart-total-price" data-cart-id="{{ cart.id }}">{{ cart.total_price }}</span></b></u></td> <!-- Отображение общей стоимости всех товаров в корзине -->
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+  <div style="text-align: justify;">
+    <a href="{% url 'store:home' %}" style="float: left;" class="button">Продолжить покупки</a> <!-- Ссылка для продолжения покупок -->
+    <a href="{% url 'checkout:checkout' %}" style="float: right;" class="button">Оформить заказ</a> <!-- Ссылка для оформления заказа -->
+  </div>
+{% else %} <!-- Если корзина пуста -->
+  <p>Ваша корзина пуста.</p> <!-- Сообщение о пустой корзине -->
+{% endif %}
+{% block js %} <!-- Начало блока js, который будет вставлен в блок js базового шаблона -->
+  <script src="{% static "assets/js/ajax.js" %}"></script> <!-- Подключение пользовательского скрипта ajax.js -->
+  <script>
+    $(document).ready(function() { <!-- Убедиться, что DOM полностью загружен -->
+      // Обработка изменения количества товаров
+      $('.quantity-input').on('change', function() { <!-- Событие изменения количества товаров -->
+        var newQuantity = $(this).val(); <!-- Получаем новое количество -->
+        var cartItemId = $(this).data('cart-item-id'); <!-- Получаем ID товара в корзине -->
+        $('.new-quantity-input').val(newQuantity); <!-- Обновляем значение скрытого поля -->
+        $('.update-cart-item-form[data-cart-item-id="' + cartItemId + '"]').submit(); <!-- Отправляем форму обновления товара -->
+      });
+    });
+  </script>
+{% endblock %}
+{% endblock %}
